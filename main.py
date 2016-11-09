@@ -1,11 +1,18 @@
 import MySQLdb
-BASE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+from warnings import filterwarnings
+from datetime import date
 
-    
+BASE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+DATABASE_NAME = 'URL'
+TABLE_NAME = 'URL_TABLE'
+LENGTH_LIMIT = 1000
+ID_SIZE = 10
+
+filterwarnings('ignore', category = MySQLdb.Warning) # To get rid of annoying warnings 
 
 class Session():
     
-    def __init__(self, user, passwd = None, mode = 'Read', id = None, url = None):
+    def __init__(self, user, passwd = None, string = None, url = None):
         """
         Session Initialization
         """
@@ -15,7 +22,20 @@ class Session():
             self.db = MySQLdb.connect(user = user)
 
         self.cursor = self.db.cursor()
+        self.db.autocommit(True)
         self.db_validate()
+        self.date = date.today()
+
+    def handler(self, string, url, date):
+        if string != None:
+            id = self.id_decoder(string)
+            return self.db_retrieve(id)
+        elif url != None:
+            self.db_insert(url)
+            return self.id_encoder(self.db.insert_id())
+        else:
+            raise
+
     
     def id_encoder(self, num, base = BASE):
         """
@@ -52,9 +72,24 @@ class Session():
         return ans
 
     def db_validate(self):
-        return self.cursor.execute(
-                "CREATE DATABASE IF NOT EXISTS URL;"
+        """
+        Create database url if it does not exist.
+        Create table url_table if it does not exist.
+        return Nothing
+        """
+        queries = (
+                "CREATE DATABASE IF NOT EXISTS {0};".format(DATABASE_NAME),
+                "USE {0}".format(DATABASE_NAME),
+                "CREATE TABLE IF NOT EXISTS {0} \
+                        ( \
+                        id INT({1}) UNSIGNED AUTO_INCREMENT PRIMARY KEY, \
+                        Url varchar({2}) \
+                        )".format(TABLE_NAME, str(ID_SIZE), str(LENGTH_LIMIT))
                 )
+        for query in queries:
+            self.cursor.execute(query)
+            self.db.commit()
+        return 
 
     
     def db_insert(self, url):
@@ -63,7 +98,9 @@ class Session():
         Input: String
         Output: Int
         """
-        return 
+        s = "INSERT INTO {0} (url) VALUES ('{1}')".format(TABLE_NAME, url)
+        self.cursor.execute(s)
+        return self.db.insert_id()
 
 
     def db_retrieve(self, id):
@@ -72,8 +109,17 @@ class Session():
         Input: Int
         Output: String
         """
-        return
+        self.cursor.execute(
+                " \
+                SELECT url \
+                FROM {0} \
+                WHERE id = {1} \
+                ".format(TABLE_NAME , str(id))
+                )
+        return  self.cursor.fetchone()[0]
 
 
 if __name__== '__main__':
-    Session('wentaolu')
+    Session('wentaolu', url = "This is a test")
+    Session('wentaolu', string = 'G')
+
