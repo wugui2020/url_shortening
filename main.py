@@ -10,7 +10,7 @@ ID_SIZE = 10
 
 filterwarnings('ignore', category = MySQLdb.Warning) # To get rid of annoying warnings 
 
-class Session():
+class Request():
     
     def __init__(self, user, passwd = None, string = None, url = None):
         """
@@ -119,10 +119,10 @@ class Session():
                 ".format(TABLE_NAME , str(id))
                 )
         ret = self.cursor.fetchone()
-        return ret[0] if ret else -1
+        return ret[0] if ret else "No Such Url"
 
 
 if __name__== '__main__':
-    Session('wentaolu', url = "This is a test")
-    Session('wentaolu', string = 'c')
+    Request('wentaolu', url = "This is a test")
+    Request('wentaolu', string = 'c')
 
