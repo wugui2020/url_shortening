@@ -1,12 +1,12 @@
 import MySQLdb
 from warnings import filterwarnings
 
-BASE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-DATABASE_NAME = 'URL'
-TABLE_NAME = 'URL_TABLE'
-LENGTH_LIMIT = 1000
-ID_SIZE = 10
-MAXIMUM_AGE_OF_URL = 365 * 10
+BASE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' # base62 alphabet
+DATABASE_NAME = 'URL' # default database name
+TABLE_NAME = 'URL_TABLE' # default table name
+LENGTH_LIMIT = 1000 # url length limit
+ID_SIZE = 10 # id int size
+MAXIMUM_AGE_OF_URL = - 365 * 10 # maximum days for a url to live in database
 
 filterwarnings('ignore', category = MySQLdb.Warning) # To get rid of annoying warnings 
 
@@ -24,7 +24,7 @@ class Request():
         self.cursor = self.db.cursor()
         self.db.autocommit(True)
         self.db_validate()
-        self.clear_old_urls()
+        # self.clear_old_urls()
         self.result = self.handler(string, url)
 
     def handler(self, string, url):
@@ -40,7 +40,6 @@ class Request():
     def clear_old_urls(self):
         """
         Remove expired entries.
-        Reset id.
         """
         self.cursor.execute(
                 "\
