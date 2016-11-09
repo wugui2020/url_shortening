@@ -25,7 +25,8 @@ class Request():
         self.db.autocommit(True)
         self.db_validate()
         self.date = date.today()
-        print self.handler(string, url)
+        self.clear_old_urls()
+        self.result = self.handler(string, url)
 
     def handler(self, string, url):
         if string != None:
@@ -123,6 +124,6 @@ class Request():
 
 
 if __name__== '__main__':
-    Request('wentaolu', url = "This is a test")
-    Request('wentaolu', string = 'c')
+    print Request('wentaolu', url = "This is a test").result
+    print Request('wentaolu', string = 'c').result
 
