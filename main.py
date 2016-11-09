@@ -25,8 +25,9 @@ class Session():
         self.db.autocommit(True)
         self.db_validate()
         self.date = date.today()
+        print self.handler(string, url)
 
-    def handler(self, string, url, date):
+    def handler(self, string, url):
         if string != None:
             id = self.id_decoder(string)
             return self.db_retrieve(id)
@@ -83,7 +84,8 @@ class Session():
                 "CREATE TABLE IF NOT EXISTS {0} \
                         ( \
                         id INT({1}) UNSIGNED AUTO_INCREMENT PRIMARY KEY, \
-                        Url varchar({2}) \
+                        Url varchar({2}), \
+                        Date date \
                         )".format(TABLE_NAME, str(ID_SIZE), str(LENGTH_LIMIT))
                 )
         for query in queries:
@@ -98,7 +100,7 @@ class Session():
         Input: String
         Output: Int
         """
-        s = "INSERT INTO {0} (url) VALUES ('{1}')".format(TABLE_NAME, url)
+        s = "INSERT INTO {0} (url, date) VALUES ('{1}', '{2}')".format(TABLE_NAME, url, self.date.isoformat())
         self.cursor.execute(s)
         return self.db.insert_id()
 
@@ -116,10 +118,11 @@ class Session():
                 WHERE id = {1} \
                 ".format(TABLE_NAME , str(id))
                 )
-        return  self.cursor.fetchone()[0]
+        ret = self.cursor.fetchone()
+        return ret[0] if ret else -1
 
 
 if __name__== '__main__':
     Session('wentaolu', url = "This is a test")
-    Session('wentaolu', string = 'G')
+    Session('wentaolu', string = 'c')
 
