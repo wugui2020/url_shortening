@@ -6,7 +6,7 @@ DATABASE_NAME = 'URL' # default database name
 TABLE_NAME = 'URL_TABLE' # default table name
 LENGTH_LIMIT = 1000 # url length limit
 ID_SIZE = 10 # id int size
-MAXIMUM_AGE_OF_URL = - 365 * 10 # maximum days for a url to live in database
+MAXIMUM_AGE_OF_URL = 365 * 10 # maximum days for a url to live in database
 PREFIX = "https://example.com/" # prefix for your short url
 
 filterwarnings('ignore', category = MySQLdb.Warning) # To get rid of annoying warnings 
