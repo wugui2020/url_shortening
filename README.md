@@ -30,8 +30,11 @@ sudo apt-get install mysql-server
 Request(username, [password, string, url])
 
 username: username for your mysql server.
+
 password(optional but recommanded): password for your mysql server.
+
 string(optional): string for url retrieval.
+
 url(optional): url string to be shortened.
 
 Attributes:
