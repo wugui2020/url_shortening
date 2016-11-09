@@ -1,12 +1,12 @@
 import MySQLdb
 from warnings import filterwarnings
-from datetime import date
 
 BASE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 DATABASE_NAME = 'URL'
 TABLE_NAME = 'URL_TABLE'
 LENGTH_LIMIT = 1000
 ID_SIZE = 10
+MAXIMUM_AGE_OF_URL = 365 * 10
 
 filterwarnings('ignore', category = MySQLdb.Warning) # To get rid of annoying warnings 
 
@@ -24,7 +24,6 @@ class Request():
         self.cursor = self.db.cursor()
         self.db.autocommit(True)
         self.db_validate()
-        self.date = date.today()
         self.clear_old_urls()
         self.result = self.handler(string, url)
 
@@ -37,6 +36,17 @@ class Request():
             return self.id_encoder(self.db.insert_id())
         else:
             raise
+
+    def clear_old_urls(self):
+        """
+        Remove expired entries.
+        Reset id.
+        """
+        self.cursor.execute(
+                "\
+                DELETE FROM {0} \
+                WHERE Date < DATE_SUB(NOW(), INTERVAL {1} DAY) \
+                ".format(TABLE_NAME, MAXIMUM_AGE_OF_URL))
 
     
     def id_encoder(self, num, base = BASE):
@@ -86,7 +96,7 @@ class Request():
                         ( \
                         id INT({1}) UNSIGNED AUTO_INCREMENT PRIMARY KEY, \
                         Url varchar({2}), \
-                        Date date \
+                        Date timestamp \
                         )".format(TABLE_NAME, str(ID_SIZE), str(LENGTH_LIMIT))
                 )
         for query in queries:
@@ -101,7 +111,7 @@ class Request():
         Input: String
         Output: Int
         """
-        s = "INSERT INTO {0} (url, date) VALUES ('{1}', '{2}')".format(TABLE_NAME, url, self.date.isoformat())
+        s = "INSERT INTO {0} (url, date) VALUES ('{1}', NOW())".format(TABLE_NAME, url)
         self.cursor.execute(s)
         return self.db.insert_id()
 
