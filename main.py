@@ -27,7 +27,7 @@ class Request():
         # self.clear_old_urls()
         self.result = self.handler(string, url)
 
-    def handler(self, string, url):
+    def _handler(self, string, url):
         if string != None:
             id = self.id_decoder(string)
             return self.db_retrieve(id)
@@ -37,7 +37,7 @@ class Request():
         else:
             raise
 
-    def clear_old_urls(self):
+    def _clear_old_urls(self):
         """
         Remove expired entries.
         """
@@ -82,7 +82,7 @@ class Request():
 
         return ans
 
-    def db_validate(self):
+    def _db_validate(self):
         """
         Create database url if it does not exist.
         Create table url_table if it does not exist.
@@ -104,7 +104,7 @@ class Request():
         return 
 
     
-    def db_insert(self, url):
+    def _db_insert(self, url):
         """
         Insert an entry into the database and return the id for shortening.
         Input: String
@@ -115,7 +115,7 @@ class Request():
         return self.db.insert_id()
 
 
-    def db_retrieve(self, id):
+    def _db_retrieve(self, id):
         """
         Get the original url from the database with id.
         Input: Int
