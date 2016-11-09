@@ -7,6 +7,7 @@ TABLE_NAME = 'URL_TABLE' # default table name
 LENGTH_LIMIT = 1000 # url length limit
 ID_SIZE = 10 # id int size
 MAXIMUM_AGE_OF_URL = - 365 * 10 # maximum days for a url to live in database
+PREFIX = "https://example.com/" # prefix for your short url
 
 filterwarnings('ignore', category = MySQLdb.Warning) # To get rid of annoying warnings 
 
@@ -33,7 +34,7 @@ class Request():
             return self.db_retrieve(id)
         elif url != None:
             self.db_insert(url)
-            return self.id_encoder(self.db.insert_id())
+            return PREFIX + self.id_encoder(self.db.insert_id())
         else:
             raise
 
