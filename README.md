@@ -37,7 +37,31 @@ python api.py
 ```
 
 GET    YOUR_URL/SHORT_URL
+will redirect to the original url if short url is valid.
 
-POST   YOUR_URL/[SHORT_URL]&data=[THE_URL_TO_BE_SHORTENED]
+POST   YOUR_URL/[SHORT_URL]&data=[THE_URL_TO_BE_SHORTENED] 
+will return a json object with orginal url under 'data' and short url under 'short_url'.
 
 Note that the url to be shortened should have the prefix of 'http://' or 'https://'. Otherwise the api will add the 'http://' to the url automatically.
+
+Examples:
+With api.py running:
+
+```
+$curl http://localhost:5000/
+"Please specify a valid short_url"
+
+$ curl http://localhost:5000/ -d "data=http://www.google.com" -X POST
+{
+    "data": "http://http://www.google.com", 
+    "short_url": "http://localhost:5000/UV20h"
+}
+
+$ curl http://localhost:5000/UV20h
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>Redirecting...</title>
+<h1>Redirecting...</h1>
+<p>You should be redirected automatically to target URL: <a href="http://http://www.google.com">http://http://www.google.com</a>.  If not click the link.
+```
+
+
