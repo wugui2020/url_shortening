@@ -48,7 +48,7 @@ class Handler(Resource):
         Handle POST requests.
         """
         url = request.form['data']
-        if not url.startswith('http://') or not url.startswith('https://'):
+        if not url.startswith('http://') and not url.startswith('https://'):
             url = 'http://' + url
         self._clear_old_urls()
         if short_url and self.get(short_url) != data:
