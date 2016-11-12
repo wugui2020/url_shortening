@@ -17,7 +17,7 @@ filterwarnings('ignore', category = MySQLdb.Warning) # To get rid of annoying wa
 
 class Handler(Resource):
     
-    def __init__(self, string = None, url = None):
+    def __init__(self):
         """
         Session Initialization
         """
@@ -41,7 +41,7 @@ class Handler(Resource):
             return 'Please specify a valid short_url'
         self._clear_old_urls()
         url = self._db_retrieve(short_url)
-        return redirect(url) if url else None
+        return redirect(url) if url else 'Please specify a valid short_url'
 
     def post(self, short_url = None):
         """
