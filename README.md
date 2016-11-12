@@ -30,6 +30,12 @@ sudo apt-get install mysql-server
 Database Username and password should be stored in 'credentials.conf' in the PATH.
 The first line of the conf should be the username and the second line should be the password. If there is no password, you need to leave an empty line.
 
+Then run api.py
+
+```
+python api.py
+```
+
 GET    YOUR_URL/SHORT_URL
 
 POST   YOUR_URL/[SHORT_URL]&data=[THE_URL_TO_BE_SHORTENED]
