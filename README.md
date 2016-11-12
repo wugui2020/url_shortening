@@ -17,6 +17,7 @@ After that:
 ```
 sudo apt-get install python-pip python-dev build-essential 
 pip install MySQL-python
+pip install flask-restful
 ```
 
 ### sqlserver
