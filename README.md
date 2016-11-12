@@ -27,15 +27,11 @@ sudo apt-get install mysql-server
 
 ## Usage
 
-Request(username, [password, string, url])
+Database Username and password should be stored in 'credentials.conf' in the PATH.
+The first line of the conf should be the username and the second line should be the password. If there is no password, you need to leave an empty line.
 
-username: username for your mysql server.
+GET    YOUR_URL/SHORT_URL
 
-password(optional but recommanded): password for your mysql server.
+POST   YOUR_URL/[SHORT_URL]&data=[THE_URL_TO_BE_SHORTENED]
 
-string(optional): string for url retrieval.
-
-url(optional): url string to be shortened.
-
-Attributes:
-Request.result: The result of your request.
+Note that the url to be shortened should have the prefix of 'http://' or 'https://'.
