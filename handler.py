@@ -11,7 +11,7 @@ DATABASE_NAME = 'URL' # default database name
 TABLE_NAME = 'URL_TABLE' # default table name
 LENGTH_LIMIT = 1000 # url length limit
 MAXIMUM_AGE_OF_URL = 365 * 10 # maximum days for a url to live in database
-PREFIX = "https://example.com/" # prefix for your short url
+PREFIX = "http://localhost:5000/" # prefix for your short url
 
 filterwarnings('ignore', category = MySQLdb.Warning) # To get rid of annoying warnings 
 
@@ -33,12 +33,20 @@ class Handler(Resource):
         self.db.autocommit(True)
         self._db_validate()
 
-    def get(self, short_url):
+    def get(self, short_url = None):
+        """
+        Handle GET requests.
+        """
+        if not short_url:
+            return 'Please specify a valid short_url'
         self._clear_old_urls()
         url = self._db_retrieve(short_url)
         return redirect(url) if url else None
 
     def post(self, short_url = None):
+        """
+        Handle POST requests.
+        """
         url = request.form['data']
         self._clear_old_urls()
         if short_url and self.get(short_url) != data:
@@ -122,9 +130,9 @@ class Handler(Resource):
     
     def _db_insert(self, url, short_url):
         """
-        Insert an entry into the database and return the id for shortening.
+        Insert an entry into the database and return insertion status.
         Input: String
-        Output: Int
+        Output: Bool
         """
         check = "SELECT id, url FROM {0} WHERE id = '{1}' OR url = '{2}'".format(TABLE_NAME, short_url, url)
         self.cursor.execute(check)
@@ -143,9 +151,9 @@ class Handler(Resource):
 
     def _db_retrieve(self, id):
         """
-        Get the original url from the database with id.
+        Get the original url from the database with shorturl.
         Input: Int
-        Output: String
+        Output: String or None
         """
         self.cursor.execute(
                 " \
