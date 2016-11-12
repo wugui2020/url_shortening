@@ -34,4 +34,4 @@ GET    YOUR_URL/SHORT_URL
 
 POST   YOUR_URL/[SHORT_URL]&data=[THE_URL_TO_BE_SHORTENED]
 
-Note that the url to be shortened should have the prefix of 'http://' or 'https://'.
+Note that the url to be shortened should have the prefix of 'http://' or 'https://'. Otherwise the api will add the 'http://' to the url automatically.
