@@ -24,16 +24,16 @@ class Request():
 
         self.cursor = self.db.cursor()
         self.db.autocommit(True)
-        self.db_validate()
-        # self.clear_old_urls()
-        self.result = self.handler(string, url)
+        self._db_validate()
+        self._clear_old_urls()
+        self.result = self._handler(string, url)
 
     def _handler(self, string, url):
         if string != None:
             id = self.id_decoder(string)
-            return self.db_retrieve(id)
+            return self._db_retrieve(id)
         elif url != None:
-            self.db_insert(url)
+            self._db_insert(url)
             return PREFIX + self.id_encoder(self.db.insert_id())
         else:
             raise
@@ -101,7 +101,6 @@ class Request():
                 )
         for query in queries:
             self.cursor.execute(query)
-            self.db.commit()
         return 
 
     
